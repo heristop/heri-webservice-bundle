@@ -1,8 +1,8 @@
 ##Configuration sample with RBS Change:
-##@uses ErpChangeBundle
+##@uses HeriChangeBundle
 #
 #heri_web_service:  
-#    namespaces:             [ Erp\ChangeBundle\Service ]
+#    namespaces:             [ Heri\ChangeBundle\Service ]
 #    authentication:
 #        login:              wwwadmin
 #        password:           abc123

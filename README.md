@@ -2,7 +2,7 @@
 
 ## Installation
 
-Download source from github:
+Download sources from github:
 
 ```ini
     [HeriJobQueueBundle]
@@ -16,7 +16,7 @@ Load in AppKernel:
     $bundles[] = new Heri\JobQueueBundle\HeriWebServiceBundle();
 ```   
 
-## Zend Framework Installation
+## ZF Installation
 
 Use this unofficial github mirror:
 
@@ -107,11 +107,24 @@ Then, use this command to call a webservice and retrieve all the records with _t
     app:console webservice:load %Service%
 ```
 
+## Configuration
+
+Edit config.yml to add _SyncListener_:
+
+```yaml
+    services:
+       sync.listener:
+            class: Heri\WebServiceBundle\SyncListener
+            tags:
+                - { name: doctrine.event_listener, event: prePersist, connection: default }
+                - { name: doctrine.event_listener, event: postPersist, connection: default }
+```
+
 ## Synchronization with the JobQueue manager
 
 This bundle can be used with [HeriJobQueueBundle](https://github.com/heristop/HeriJobQueueBundle) to manage multiple webservice connections.
 
-Set the _SyncListener_ service in config.yml:
+Add the depedency to jobqueue service in config.yml:
 
 ```yaml
     services:
@@ -119,6 +132,7 @@ Set the _SyncListener_ service in config.yml:
             class: Heri\WebServiceBundle\SyncListener
             arguments: [@jobqueue]
             tags:
+                - { name: doctrine.event_listener, event: prePersist, connection: default }
                 - { name: doctrine.event_listener, event: postPersist, connection: default }
 ```
 
@@ -136,4 +150,8 @@ Add a method called _synchronize()_ in the object which return the name of queue
     }
 ```
 
-When the record will be saved in database, the synchronization with the webservice will be pushed in queue.
+When the record will be saved in database, the synchronization to the webservice will be pushed in queue.
+
+## Note
+
+To see an implementation example, see [HeriChangeBundle](https://github.com/heristop/HeriChangeBundle).

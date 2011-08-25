@@ -211,7 +211,7 @@ abstract class ClientObject
      * @param     Doctrine\ORM\QueryBuilder $qb
      * @access    public
      */
-    public function addColumnsToUpdate($qb)
+    public function addColumnsToUpdate(QueryBuilder $qb)
     {
         return $qb;
     }

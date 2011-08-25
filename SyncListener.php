@@ -15,12 +15,12 @@ use Symfony\Component\EventDispatcher\Event;
 
 class SyncListener
 {
-    protected $queue;
+    protected $queue = null;
 
     /**
-     *@param QueueService $queue
+     *@param QueueService $queue (optional)
      */
-    public function __construct(\Heri\JobQueueBundle\QueueService $queue)
+    public function __construct(\Heri\JobQueueBundle\QueueService $queue = null)
     {
         $this->queue = $queue;
     }
@@ -38,7 +38,7 @@ class SyncListener
     {
         $entity = $eventArgs->getEntity();
         
-        if (method_exists($entity, 'synchronize')) {
+        if (method_exists($entity, 'synchronize') && !is_null($this->queue)) {
             $this->queue->configure($entity->synchronize(), $eventArgs->getEntityManager());
             
             $namespace = explode('\\', get_class($entity));
