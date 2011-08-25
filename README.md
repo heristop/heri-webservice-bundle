@@ -1,5 +1,7 @@
 # WebServiceBundle
 
+This bundle allows to synchronize a Doctrine entity with a webservice.
+
 ## Installation
 
 Download sources from github:
@@ -7,7 +9,16 @@ Download sources from github:
 ```ini
     [HeriJobQueueBundle]
         git=https://github.com/heristop/HeriWebServiceBundle.git
-        target=/bundles/Heri/Bundle/
+        target=/bundles/Heri/WebServiceBundle/
+```
+
+Register namespace in autoload:
+
+```php
+    $loader->registerNamespaces(array(
+        ...
+        'Heri' => __DIR__.'/../vendor/bundles',
+    ));
 ```
 
 Load in AppKernel: 
