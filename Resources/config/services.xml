@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="ws.connection" class="Heri\WebServiceBundle\ClientSoap\Connection" />
+        <service id="ws.client" class="Heri\WebServiceBundle\ClientSoap\ClientDispatcher">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="ws.connection" />
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="webservice" />
+        </service>
+        <!--
+        <service id="sync.listener" class="Heri\WebServiceBundle\SyncListener">
+            <argument type="service" id="jobqueue" />
+            <tag name="doctrine.event_listener" event="prePersist" connection="default" />
+            <tag name="doctrine.event_listener" event="postPersist" connection="default" />
+        </service>
+        -->
+    </services>
+    
+</container>

@@ -1,0 +1,19 @@
+##Configuration sample with RBS Change:
+##@uses ErpChangeBundle
+#
+#heri_web_service:  
+#    namespaces:             [ Erp\ChangeBundle\Service ]
+#    authentication:
+#        login:              wwwadmin
+#        password:           abc123
+#    webservices:
+#        notification:
+#            url:            http://erp-local.com/webservices/notification/notification
+#            authentication: true
+#        brand:
+#            url:            http://erp-local.com/webservices/ecomwebservices/brand
+#        product:
+#            url:            http://erp-local.com/webservices/ecomwebservices/product
+#        price:
+#            url:            http://erp-local.com/webservices/ecomwebservices/price
+
