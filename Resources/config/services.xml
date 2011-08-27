@@ -13,7 +13,7 @@
             <tag name="monolog.logger" channel="webservice" />
         </service>
         <!--
-        <service id="sync.listener" class="Heri\WebServiceBundle\SyncListener">
+        <service id="sync.listener" class="Heri\WebServiceBundle\Service\SyncListener">
             <argument type="service" id="jobqueue" />
             <tag name="doctrine.event_listener" event="prePersist" connection="default" />
             <tag name="doctrine.event_listener" event="postPersist" connection="default" />

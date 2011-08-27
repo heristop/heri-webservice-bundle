@@ -24,7 +24,7 @@ class SoapException extends \Exception
     protected $data     = null;
     
     /**
-    * @param  string problem source : config, connect, result
+    * @param  string problem source: config, connect, result
     * @param  string message
     * @param  ClientObject $client
     */

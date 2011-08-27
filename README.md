@@ -135,16 +135,21 @@ Edit config.yml to add _SyncListener_:
 
 This bundle can be used with [HeriJobQueueBundle](https://github.com/heristop/HeriJobQueueBundle) to manage multiple webservice connections.
 
-Add the depedency to jobqueue service in config.yml:
+Override configuration and add the depedency to jobqueue service in config.yml:
 
 ```yaml
     services:
-       sync.listener:
-            class: Heri\WebServiceBundle\SyncListener
+        sync.listener:
+            class: Heri\WebServiceBundle\Service\SyncListener
             arguments: [@jobqueue]
             tags:
                 - { name: doctrine.event_listener, event: prePersist, connection: default }
                 - { name: doctrine.event_listener, event: postPersist, connection: default }
+        jobqueue:
+            class: Heri\JobQueueBundle\Service\QueueService
+            arguments: [@logger]
+            tags:
+                - { name: monolog.logger, channel: jobqueue }
 ```
 
 Add a method called _synchronize()_ in the object which return the name of queue:

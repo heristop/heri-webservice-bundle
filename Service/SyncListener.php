@@ -9,9 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Heri\WebServiceBundle;
+namespace Heri\WebServiceBundle\Service;
 
 use Symfony\Component\EventDispatcher\Event;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Heri\JobQueueBundle\Service\QueueService;
 
 class SyncListener
 {
@@ -20,12 +22,12 @@ class SyncListener
     /**
      *@param QueueService $queue (optional)
      */
-    public function __construct(\Heri\JobQueueBundle\QueueService $queue = null)
+    public function __construct(QueueService $queue = null)
     {
         $this->queue = $queue;
     }
     
-    public function prePersist(\Doctrine\ORM\Event\LifecycleEventArgs $eventArgs)
+    public function prePersist(LifecycleEventArgs $eventArgs)
     {
         $entity = $eventArgs->getEntity();
         
@@ -34,7 +36,7 @@ class SyncListener
         }
     }
 
-    public function postPersist(\Doctrine\ORM\Event\LifecycleEventArgs $eventArgs)
+    public function postPersist(LifecycleEventArgs $eventArgs)
     {
         $entity = $eventArgs->getEntity();
         
@@ -43,7 +45,7 @@ class SyncListener
             
             $namespace = explode('\\', get_class($entity));
             $namespace = array_reverse($namespace);
-            $service = array_shift($namespace);
+            $service   = array_shift($namespace);
             
             $config = array(
                 'command'   => 'webservice:load',
@@ -52,6 +54,10 @@ class SyncListener
                     'service'  => $service
                 ),
             );
+            
+            if (method_exists($entity, 'getWsConfig')) {
+                $config = array_merge($config, $entity->getWsConfig());
+            }
             
             $this->queue->sync($config);
         }
