@@ -152,7 +152,7 @@ abstract class ClientObject
     public function push()
     {
         try {
-            $this->result = $this->callSoapClient($this->name, $this->params, true);
+            $this->result = $this->callSoapClient($this->name, $this->params);
         }
         catch (SoapException $e) {
             $this->errorOnCallSoapClient($e->getMessage());
@@ -162,6 +162,7 @@ abstract class ClientObject
     /**
      * Adds condition to retrieves the next record
      *
+     * @uses      Doctrine
      * @param     Doctrine\ORM\QueryBuilder $qb
      * @access    public
      */
@@ -185,6 +186,7 @@ abstract class ClientObject
     /**
      * Adds columns to set after synchronize
      *
+     * @uses      Doctrine
      * @param     Doctrine\ORM\QueryBuilder $qb
      * @access    public
      */
@@ -251,9 +253,18 @@ abstract class ClientObject
         return $this->container;
     }
     
+    public function getFunctions()
+    {
+        $this->configure();
+        
+        $this->getSoapClient($this->name);
+        
+        return $this->client->getFunctions();
+    }
+    
     /**
-     * @param     Doctrine\ORM\QueryBuilder $qb
-     * @access    public
+     * @uses      Doctrine
+     * @access    protected
      */
     protected function setAsUpdated()
     {
@@ -281,7 +292,7 @@ abstract class ClientObject
      * @param string message
      * @param mixed $result
      */
-    final public function errorOnCallSoapClient($message, $result = null)
+    public function errorOnCallSoapClient($message, $result = null)
     {
         if (!is_null($result) && !empty($result)) {
             $result = (array) $result;
@@ -291,37 +302,44 @@ abstract class ClientObject
         throw new SoapException(SoapException::TYPE_ANSWER, $message, $this->getContainer());
     }
     
-    /**
-     * Calls the WebService
-     * 
-     * @return mixed (Change returns stdClass by default)
-     */ 
-    protected function callSoapClient($name, $data)
+    protected function getSoapClient($name)
     {
         $config = $this->container->getConfiguration();
         
-        $authentication = $config['authentication'];
+        $wsAuth = $config['authentication'];
+        $wsConf = null;
         $webservices = $config['webservices'];
-        $webserviceConf = null;
         foreach ($webservices as $webservice) {
             if (isset($webservice['name'][$name])) {
-                $webserviceConf = $webservice;
+                $wsConf = $webservice;
                 break;
             }
         }
         
-        if (is_null($webserviceConf)) {
+        if (is_null($conf)) {
             throw new \Exception(sprintf("Configuration for '%s' webservice not found.", $name));
         }
         
+        $this->client = $this->container->getConnection()->getSoapClient($name, array(
+            'authentication' => $wsConf['authentication'],
+            'cache_enabled'  => $wsConf['cache_enabled'],
+            'soap_url'       => $wsConf['url'],
+            'login'          => $wsAuth['login'],
+            'password'       => $wsAuth['password']
+        ));
+    }
+    
+    /**
+     * Calls the WebService
+     *
+     * @param string $name
+     * @param array  $data
+     * @return mixed (Change returns stdClass by default)
+     */ 
+    protected function callSoapClient($name, array $data = array())
+    {
         if (!$this->client) {
-            $this->client = $this->container->getConnection()->getSoapClient($name, array(
-                'authentication' => $webserviceConf['authentication'],
-                'cache_enabled'  => $webserviceConf['cache_enabled'],
-                'soap_url'       => $webserviceConf['url'],
-                'login'          => $authentication['login'],
-                'password'       => $authentication['password']
-            ));
+            $this->getSoapClient($name);
         }
         
         try {

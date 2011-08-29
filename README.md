@@ -129,6 +129,8 @@ Then, use this command to call a webservice and retrieve all the records with _t
     app:console webservice:load %Service%
 ```
 
+To see the list of available functions add _list_ option.
+
 ## Configuration
 
 Edit config.yml to add _SyncListener_:

@@ -30,6 +30,7 @@ class SyncCommand extends ContainerAwareCommand
             ->setDescription('Synchronize entity with webservice')
             ->addArgument('service', InputArgument::REQUIRED, 'Name of service')
             ->addOption('record', null, InputOption::VALUE_OPTIONAL, 'Record primary key')
+            ->addOption('list', null, InputOption::VALUE_NONE, 'Return a list of available functions')
         ;
     }
 
@@ -41,14 +42,20 @@ class SyncCommand extends ContainerAwareCommand
         $service->configure($config, $input);
         $this->client = $service->getClient();
         
-        while ($record = $this->client->getNextRecord())
-        {
-            $tStart = microtime(true);
-            $this->pushRecord($record);
-            $output->writeln(
-                '<comment>Time execution in seconds: ' .
-                number_format(microtime(true) - $tStart, 3).'</comment>'
-            );
+        if ($input->getOption('list')) {
+            $output->writeln('<info>List of available functions:</info>');
+            $output->writeln($this->client->getFunctions());
+        }
+        else {
+            while ($record = $this->client->getNextRecord())
+            {
+                $tStart = microtime(true);
+                $this->pushRecord($record);
+                $output->writeln(
+                    '<comment>Time execution in seconds: ' .
+                    number_format(microtime(true) - $tStart, 3).'</comment>'
+                );
+            }
         }
     }
     
