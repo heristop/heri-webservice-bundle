@@ -316,7 +316,7 @@ abstract class ClientObject
             }
         }
         
-        if (is_null($conf)) {
+        if (is_null($wsConf)) {
             throw new \Exception(sprintf("Configuration for '%s' webservice not found.", $name));
         }
         
