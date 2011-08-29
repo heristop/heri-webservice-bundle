@@ -11,6 +11,8 @@
 
 namespace Heri\WebServiceBundle\ClientSoap;
 
+
+
 class SoapException extends \Exception
 {
     const TYPE_CONFIG  = 'conf';
@@ -26,16 +28,16 @@ class SoapException extends \Exception
     /**
     * @param  string problem source: config, connect, result
     * @param  string message
-    * @param  ClientObject $client
+    * @param  ClientDispatcher $container
     */
-    public function __construct($type, $message, ClientObject $client)
+    public function __construct($type, $message, ClientDispatcher $container)
     {
       $this->errType = $type;
       $this->errMsg  = $message;
-      $this->name    = $client->getName();
-      $this->data    = $client->getData();
+      $this->name    = $container->getClient()->getName();
+      $this->data    = $container->getClient()->getData();
       
-      $logger = $client->getContainer()->getLogger();
+      $logger = $container->getLogger();
       $logger->err($this->getWsErr(true));
       
       return parent::__construct($this->getWsErr(false));

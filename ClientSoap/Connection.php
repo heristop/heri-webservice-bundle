@@ -49,7 +49,7 @@ class Connection
         $wsdl = @file_get_contents($soapUrl);
         if (!$wsdl)
         {
-            throw new SoapException(SoapException::TYPE_CONNECT, 'Unable to reach WebService');
+            throw new SoapException(SoapException::TYPE_CONNECT, 'Unable to reach webservice');
         }
         
         if (strpos($wsdl, 'definitions') === false)

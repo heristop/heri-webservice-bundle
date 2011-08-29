@@ -11,7 +11,6 @@ Download sources from github:
     [HeriJobQueueBundle]
         git=https://github.com/heristop/HeriWebServiceBundle.git
         target=/bundles/Heri/WebServiceBundle/
-
 ```
 
 Register namespace in autoload:
@@ -22,14 +21,13 @@ Register namespace in autoload:
         ...
         'Heri' => __DIR__.'/../vendor/bundles',
     ));
-
 ```
 
 Load in AppKernel: 
 
 ```php
     $bundles[] = new Heri\JobQueueBundle\HeriWebServiceBundle();
-```   
+```
 
 ## ZF Installation
 
@@ -40,7 +38,6 @@ Use this unofficial github mirror:
     [ZendFrameworkLibrary]
         git=https://github.com/tjohns/zf.git
         target=/zf
-
 ```
 
 Register a prefix in AppKernel:
@@ -76,7 +73,6 @@ This field will be set to _false_ after the synchronization:
      * @ORM\Column(name="to_update", type="boolean")
      */
     protected $toUpdate;
-
 ```
 
 Generate getters and setters:
@@ -109,7 +105,6 @@ For example, we have an entity _Brand_ which implements the following service:
             );
         }
     }
-
 ```
 
 Configure the webservices connection in config.yml:
@@ -118,14 +113,14 @@ Configure the webservices connection in config.yml:
 
     heri_web_service:  
         namespaces:             [ %YourBundleNamespace%\Service ]
-        #authentication:
-        #    login:              %login%
-        #    password:           %password%
+        authentication:                      # optional
+            login:              %login%
+            password:           %password%
         webservices:
             brand:
+                name:           brand
                 url:            %soap_url%
-        #        authentication: true
-
+                authentication: true         # optional
 ```
 
 Then, use this command to call a webservice and retrieve all the records with _toUpdate_ to _true_:
@@ -146,7 +141,6 @@ Edit config.yml to add _SyncListener_:
             tags:
                 - { name: doctrine.event_listener, event: prePersist, connection: default }
                 - { name: doctrine.event_listener, event: postPersist, connection: default }
-
 ```
 
 ## Synchronization with the JobQueue manager
@@ -169,7 +163,6 @@ Override configuration and add the depedency to jobqueue service in config.yml:
             arguments: [@logger]
             tags:
                 - { name: monolog.logger, channel: jobqueue }
-
 ```
 
 Add a method called _synchronize()_ in the object which return the name of queue:
@@ -185,7 +178,6 @@ Add a method called _synchronize()_ in the object which return the name of queue
     {
         return '%queue_name%';
     }
-
 ```
 
 When the record will be saved in database, the synchronization to the webservice will be pushed in queue.

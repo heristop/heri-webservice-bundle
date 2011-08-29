@@ -47,6 +47,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->addDefaultsIfNotSet()
                         ->children()
+                            ->scalarNode('name')->isRequired()->end()
                             ->scalarNode('url')->isRequired()->end()
                             ->booleanNode('authentication')->defaultFalse()->end()
                             ->booleanNode('cache_enabled')->defaultFalse()->end()

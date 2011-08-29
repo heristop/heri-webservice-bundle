@@ -55,7 +55,8 @@ abstract class ClientObject
         if (is_null($this->func)) {
             throw new SoapException(
                 SoapException::TYPE_CALL,
-                'No function to call in ' . get_class($this)
+                'No function to call in ' . get_class($this),
+                $this->getContainer()
             );
         }
         
@@ -180,30 +181,6 @@ abstract class ClientObject
         
         return (array) $this->result;
     }
-
-    /**
-     * @param     Doctrine\ORM\QueryBuilder $qb
-     * @access    public
-     */
-    protected function setAsUpdated()
-    {
-        $em = $this->container->getEntityManager();
-        
-        $qb = $em->createQueryBuilder()
-            ->select('a')
-            ->from($this->table, 'a');
-        
-        if (in_array('to_update', $this->columns)) {
-            $qb->set('a.to_update = false');
-        }
-        
-        $qb->addColumnsToUpdate($qb);
-        
-        $qb->where('a.'.$this->pkColumn.' = :pk_value');
-        $qb->setParameter('pk_value', $this->record->{$this->pkColumn});
-        $query = $qb->getQuery();
-        $query->execute();
-    }
     
     /**
      * Adds columns to set after synchronize
@@ -275,6 +252,30 @@ abstract class ClientObject
     }
     
     /**
+     * @param     Doctrine\ORM\QueryBuilder $qb
+     * @access    public
+     */
+    protected function setAsUpdated()
+    {
+        $em = $this->container->getEntityManager();
+        
+        $qb = $em->createQueryBuilder()
+            ->select('a')
+            ->from($this->table, 'a');
+        
+        if (in_array('to_update', $this->columns)) {
+            $qb->set('a.to_update = false');
+        }
+        
+        $qb->addColumnsToUpdate($qb);
+        
+        $qb->where('a.'.$this->pkColumn.' = :pk_value');
+        $qb->setParameter('pk_value', $this->record->{$this->pkColumn});
+        $query = $qb->getQuery();
+        $query->execute();
+    }
+    
+    /**
      * Throws WebService exceptions
      * 
      * @param string message
@@ -287,7 +288,7 @@ abstract class ClientObject
             $message .= sprintf("%s\n", print_r($result, true));
         }
         
-        throw new SoapException(SoapException::TYPE_ANSWER, $message, $this, $this->params);
+        throw new SoapException(SoapException::TYPE_ANSWER, $message, $this->getContainer());
     }
     
     /**
@@ -295,11 +296,23 @@ abstract class ClientObject
      * 
      * @return mixed (Change returns stdClass by default)
      */ 
-    final protected function callSoapClient($name, $data)
+    protected function callSoapClient($name, $data)
     {
         $config = $this->container->getConfiguration();
+        
         $authentication = $config['authentication'];
-        $webserviceConf = $config['webservices'][$name];
+        $webservices = $config['webservices'];
+        $webserviceConf = null;
+        foreach ($webservices as $webservice) {
+            if (isset($webservice['name'][$name])) {
+                $webserviceConf = $webservice;
+                break;
+            }
+        }
+        
+        if (is_null($webserviceConf)) {
+            throw new \Exception(sprintf("Configuration for '%s' webservice not found.", $name));
+        }
         
         if (!$this->client) {
             $this->client = $this->container->getConnection()->getSoapClient($name, array(
@@ -317,10 +330,11 @@ abstract class ClientObject
             $result = $record->$resultFunction;
         }
         catch (\SoapFault $fault) {
+            
             throw new SoapException(
                 SoapException::TYPE_CALL,
                 "SOAP Fault: (faultcode: {$fault->faultcode}, faultstring: {$fault->faultstring})",
-                $this
+                $this->getContainer()
             );
         }
         
