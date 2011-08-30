@@ -123,7 +123,7 @@ abstract class ClientObject
         $qb = $this->addCriteria($qb);
         
         if (in_array('to_update', $this->columns)) {
-            $qb->where('to_update = true');
+            $qb->where('a.toUpdate = true');
         }
         
         if (!is_null($this->recordId)) {
@@ -177,7 +177,7 @@ abstract class ClientObject
             $this->setAsUpdated();
         }
         catch (\Exception $e) {
-            throw new \Exception(__CLASS_ . ' ' . $e->getMessage());
+            throw new \Exception(__CLASS__. ' ' . $e->getMessage());
         }
         
         return (array) $this->result;
@@ -271,17 +271,17 @@ abstract class ClientObject
         $em = $this->container->getEntityManager();
         
         $qb = $em->createQueryBuilder()
-            ->select('a')
-            ->from($this->table, 'a');
+            ->update($this->table, 'a');
         
         if (in_array('to_update', $this->columns)) {
-            $qb->set('a.to_update = false');
+            $qb->set('a.toUpdate', $qb->expr()->literal(false));
         }
         
-        $qb->addColumnsToUpdate($qb);
+        $qb = $this->addColumnsToUpdate($qb);
         
-        $qb->where('a.'.$this->pkColumn.' = :pk_value');
-        $qb->setParameter('pk_value', $this->record->{$this->pkColumn});
+        $qb->where('a.'.$this->primaryKey.' = :pk_value');
+        $method = 'get' . ucfirst($this->primaryKey);
+        $qb->setParameter('pk_value', $this->record->$method());
         $query = $qb->getQuery();
         $query->execute();
     }
@@ -327,6 +327,7 @@ abstract class ClientObject
             'login'          => $wsAuth['login'],
             'password'       => $wsAuth['password']
         ));
+        
     }
     
     /**
@@ -343,9 +344,7 @@ abstract class ClientObject
         }
         
         try {
-            $record = $this->client->__call($this->func, array($data));
-            $resultFunction = "{$this->func}Result";
-            $result = $record->$resultFunction;
+            $result = $this->callFunction($this->func, $data);
         }
         catch (\SoapFault $fault) {
             
@@ -357,5 +356,16 @@ abstract class ClientObject
         }
         
         return $result;
+    }
+    
+    /**
+     * @param string $func
+     * @param array  $data
+     */
+    protected function callFunction($func, array $data = array())
+    {
+        $record = $this->client->__call($func, array($data));
+        $resultFunction = "{$this->func}Result";
+        $result = $record->$resultFunction;
     }
 }

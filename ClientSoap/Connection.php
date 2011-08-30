@@ -18,6 +18,11 @@ class Connection
 {
     private static $client;
     
+    protected
+        $login,
+        $password
+    ;
+    
     /**
      * Retrieves Soap Client via a singleton
      *
@@ -29,10 +34,25 @@ class Connection
     {
         if (! self::$client)
         {
-            self::createSoapClient($name, $options);
+            $this->createSoapClient($name, $options);
         }
         
         return self::$client;
+    }
+    
+    public function resetClientSingleton()
+    {
+        self::$client = false;
+    }
+    
+    public function getLogin()
+    {
+        return $this->login;
+    }
+    
+    public function getPassword()
+    {
+        return $this->password;
     }
     
     /**
@@ -42,7 +62,7 @@ class Connection
      * @access private static
      * @return boolean 
      */ 
-    private static function createSoapClient($name, $options)
+    protected function createSoapClient($name, $options)
     {
         // catch Soap error connection
         $soapUrl = $options['soap_url'] . '?wsdl';
@@ -61,6 +81,9 @@ class Connection
         {
             ini_set("soap.wsdl_cache_enabled", $options['cache_enabled']);
         }
+        
+        $this->login    = $options['login'];
+        $this->password = $options['password'];
 
         $configuration = array(
             'soap_version' => SOAP_1_2,
@@ -70,8 +93,8 @@ class Connection
         if ($options['authentication'])
         {
             $configuration = array_merge($configuration, array(
-                'login'    => $options['login'],
-                'password' => $options['password']
+                'login'    => $this->login,
+                'password' => $this->password
             ));
         }
 
@@ -85,10 +108,5 @@ class Connection
         }
 
         return true;
-    }
-    
-    public function resetClientSingleton()
-    {
-        self::$client = false;
     }
 }

@@ -186,4 +186,4 @@ When the record will be saved in database, the synchronization to the webservice
 
 ## Note
 
-See an exemple of implementation here: [HeriChangeBundle](https://github.com/heristop/HeriChangeBundle).
+...
