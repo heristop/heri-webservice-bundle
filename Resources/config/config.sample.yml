@@ -1,0 +1,13 @@
+#heri_web_service:
+#    namespaces:             [ %YourBundleNamespace%\Service ]
+#    authentication:
+#        login:              sampleuser
+#        password:           123456
+#    webservices:
+#        sample1:
+#            name:           sample
+#            url:            http://myshop-local.com/webservices/sample
+#        sample2:
+#            name:           secure
+#            url:            http://myshop-local.com/webservices/secure
+#            authentication: true

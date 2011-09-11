@@ -33,11 +33,8 @@ Load in AppKernel:
 
 Use this unofficial github mirror:
 
-```ini
-
-    [ZendFrameworkLibrary]
-        git=https://github.com/tjohns/zf.git
-        target=/zf
+```shell
+    git clone https://github.com/tjohns/zf.git vendor/zf
 ```
 
 Register a prefix in AppKernel:
@@ -82,28 +79,31 @@ Generate getters and setters:
 ```
 
 Create a class in _%YourBundle%/Service_ directory to apply the mapping with the WSDL.
-For example, we have an entity _Brand_ which implements the following service:
+The bundle contains an example:
 
 ```php
 
-    class Brand extends ClientObject
+    namespace Heri\WebServiceBundle\Service;
+    
+    use Heri\WebServiceBundle\ClientSoap\ClientObject;
+    
+    class Sample extends ClientObject
     {
         public function configure()
         {
-            $this->name  = 'brand';                // used to retrieve soap url in config
-            $this->table = '%YourBundle%:Brand';
-            $this->func  = 'update';               // function to call
+            $this->name  = 'sample';
+            $this->table = 'HeriWebServiceBundle:Sample';
+            $this->func  = 'addSample';
         }
         
         public function hydrate($record)
-        {
+        {  
             $this->params = array(
-              'id'            => $record->getCodeReference(),
-              'label'         => $record->getLabel(),
-              'website_url'   => $record->getWebsiteUrl(),
-              'firstLetter'   => $record->getFirstLetter(),
+                'id'    => $record->getId(),
+                'label' => $record->getLabel(),
             );
         }
+    
     }
 ```
 
@@ -139,7 +139,7 @@ Edit config.yml to add _SyncListener_:
 
     services:
        sync.listener:
-            class: Heri\WebServiceBundle\SyncListener
+            class: Heri\WebServiceBundle\Listener\SyncListener
             tags:
                 - { name: doctrine.event_listener, event: prePersist, connection: default }
                 - { name: doctrine.event_listener, event: postPersist, connection: default }
@@ -155,7 +155,7 @@ Override configuration and add the depedency to jobqueue service in config.yml:
 
     services:
         sync.listener:
-            class: Heri\WebServiceBundle\Service\SyncListener
+            class: Heri\WebServiceBundle\Listener\SyncListener
             arguments: [@jobqueue]
             tags:
                 - { name: doctrine.event_listener, event: prePersist, connection: default }
@@ -186,4 +186,39 @@ When the record will be saved in database, the synchronization to the webservice
 
 ## Note
 
-...
+You can override the _ClientObject_ class in order to apply a specific configuration.
+
+The example below shows the method to connect your application to a Magento plateform: 
+
+```yaml
+
+heri_web_service:
+    namespaces:             [ %YourBundleNamespace%\Service ]
+    authentication:
+        login:              sampleuser
+        password:           123456
+    webservices:
+        magento:
+            name:           api
+            url:            http://myshop-local.com/index.php/api/
+```
+
+```php
+
+abstract class ClientMagento extends ClientObject
+{
+    protected $name = 'api';
+    
+    protected function callFunction($func, array $params = array())
+    {
+        $connection = $this->getContainer()->getConnection();
+        $sessionId = $this->client->login($connection->getLogin(), $connection->getPassword());
+        
+        return $this->client->call(
+            $sessionId,
+            $func,
+            $params
+        );
+    }
+}
+```

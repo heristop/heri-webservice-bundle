@@ -123,11 +123,12 @@ abstract class ClientObject
         $qb = $this->addCriteria($qb);
         
         if (in_array('to_update', $this->columns)) {
-            $qb->where('a.toUpdate = true');
+            $qb->andWhere('a.toUpdate = :updated');
+            $qb->setParameter('updated', true);
         }
         
         if (!is_null($this->recordId)) {
-            $qb->where('a.'.$this->primaryKey . ' = :record');
+            $qb->andWhere('a.'.$this->primaryKey . ' = :record');
             $qb->setParameter('record', $this->recordId);
         }
         
@@ -276,7 +277,7 @@ abstract class ClientObject
         if (in_array('to_update', $this->columns)) {
             $qb->set('a.toUpdate', $qb->expr()->literal(false));
         }
-        
+
         $qb = $this->addColumnsToUpdate($qb);
         
         $qb->where('a.'.$this->primaryKey.' = :pk_value');
@@ -306,7 +307,6 @@ abstract class ClientObject
     {
         $config = $this->container->getConfiguration();
         
-        $wsAuth = $config['authentication'];
         $wsConf = null;
         $webservices = $config['webservices'];
         foreach ($webservices as $webservice) {
@@ -320,31 +320,34 @@ abstract class ClientObject
             throw new \Exception(sprintf("Configuration for '%s' webservice not found.", $name));
         }
         
-        $this->client = $this->container->getConnection()->getSoapClient($name, array(
+        $options = array(
             'authentication' => $wsConf['authentication'],
             'cache_enabled'  => $wsConf['cache_enabled'],
             'soap_url'       => $wsConf['url'],
-            'login'          => $wsAuth['login'],
-            'password'       => $wsAuth['password']
-        ));
+        );
         
+        if (isset($config['authentication'])) {
+            $otpions = array_merge($options, $config['authentication']);
+        }
+        
+        $this->client = $this->container->getConnection()->getSoapClient($name, $options);
     }
     
     /**
      * Calls the WebService
      *
      * @param string $name
-     * @param array  $data
-     * @return mixed (Change returns stdClass by default)
+     * @param array  $params
+     * @return mixed
      */ 
-    protected function callSoapClient($name, array $data = array())
+    protected function callSoapClient($name, array $params = array())
     {
         if (!$this->client) {
             $this->getSoapClient($name);
         }
         
         try {
-            $result = $this->callFunction($this->func, $data);
+            $result = $this->callFunction($this->func, $params);
         }
         catch (\SoapFault $fault) {
             
@@ -360,12 +363,10 @@ abstract class ClientObject
     
     /**
      * @param string $func
-     * @param array  $data
+     * @param array  $params
      */
-    protected function callFunction($func, array $data = array())
+    protected function callFunction($func, array $params = array())
     {
-        $record = $this->client->__call($func, array($data));
-        $resultFunction = "{$this->func}Result";
-        $result = $record->$resultFunction;
+        return $this->client->__call($func, $params);
     }
 }

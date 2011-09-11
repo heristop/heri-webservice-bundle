@@ -1,0 +1,3 @@
+ws_sample:
+    pattern:  /sample
+    defaults: { _controller: HeriWebServiceBundle:Sample:index }

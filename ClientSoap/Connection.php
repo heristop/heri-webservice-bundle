@@ -77,14 +77,8 @@ class Connection
             throw new SoapException(SoapException::TYPE_CONNECT, 'Wrong WSDL format');
         }
         
-        if ($options['cache_enabled'])
-        {
-            ini_set("soap.wsdl_cache_enabled", $options['cache_enabled']);
-        }
+        ini_set("soap.wsdl_cache_enabled", $options['cache_enabled']);
         
-        $this->login    = $options['login'];
-        $this->password = $options['password'];
-
         $configuration = array(
             'soap_version' => SOAP_1_2,
             'compression'  => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
@@ -92,6 +86,9 @@ class Connection
         
         if ($options['authentication'])
         {
+            $this->login = $options['login'];
+            $this->password = $options['password'];
+            
             $configuration = array_merge($configuration, array(
                 'login'    => $this->login,
                 'password' => $this->password

@@ -11,8 +11,6 @@
 
 namespace Heri\WebServiceBundle\ClientSoap;
 
-
-
 class SoapException extends \Exception
 {
     const TYPE_CONFIG  = 'conf';
@@ -30,33 +28,39 @@ class SoapException extends \Exception
     * @param  string message
     * @param  ClientDispatcher $container
     */
-    public function __construct($type, $message, ClientDispatcher $container)
+    public function __construct($type, $message, ClientDispatcher $container = null)
     {
       $this->errType = $type;
       $this->errMsg  = $message;
-      $this->name    = $container->getClient()->getName();
-      $this->data    = $container->getClient()->getData();
       
-      $logger = $container->getLogger();
-      $logger->err($this->getWsErr(true));
+      if (!is_null($container)) {
+        $this->name    = $container->getClient()->getName();
+        $this->data    = $container->getClient()->getData();
+        
+        $logger = $container->getLogger();
+        $logger->err($this->getWsErr(true));
+      }
       
       return parent::__construct($this->getWsErr(false));
     }
     
     /**
-    *
-    * @access public
-    * @return sting
-    */
+     * @access public
+     * @return sting
+     */
     public function __toString()
     {
         return $this->getWsErr(true);
     }
     
-    public function getWsErr($withData = false)
+    /**
+     * @params string verbose
+     * @return string
+     */
+    public function getWsErr($verbose = false)
     {
         $msg = ($this->name ? '['.$this->name.']' : '') . '['.$this->errType.'] ' . $this->errMsg;
-        if ($withData && $this->data && ! empty($this->data)) {
+        if ($verbose && $this->data && ! empty($this->data)) {
             $msg .= "\n" . print_r($this->data, true);
         }
         

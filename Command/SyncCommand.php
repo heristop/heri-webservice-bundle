@@ -47,13 +47,12 @@ class SyncCommand extends ContainerAwareCommand
             $output->writeln($this->client->getFunctions());
         }
         else {
-            while ($record = $this->client->getNextRecord())
-            {
+            while ($record = $this->client->getNextRecord()) {
                 $tStart = microtime(true);
                 $this->pushRecord($record);
                 $output->writeln(
                     '<comment>Time execution in seconds: ' .
-                    number_format(microtime(true) - $tStart, 3).'</comment>'
+                    number_format(microtime(true) - $tStart, 3) . '</comment>'
                 );
             }
         }
@@ -67,13 +66,11 @@ class SyncCommand extends ContainerAwareCommand
      */
     protected function pushRecord($record = null)
     {
-        try
-        {
+        try {
           $this->client->rehydrate($record);
           $this->client->push();
         }
-        catch (\Exception $e)
-        {
+        catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
         
