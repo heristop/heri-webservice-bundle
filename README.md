@@ -29,7 +29,7 @@ Load in AppKernel:
     $bundles[] = new Heri\JobQueueBundle\HeriWebServiceBundle();
 ```
 
-## ZF Installation
+## Zend Framework
 
 Use this unofficial github mirror:
 
@@ -145,7 +145,7 @@ Edit config.yml to add _SyncListener_:
                 - { name: doctrine.event_listener, event: postPersist, connection: default }
 ```
 
-## Synchronization with the JobQueue manager
+## JobQueue
 
 This bundle can be used with [HeriJobQueueBundle](https://github.com/heristop/HeriJobQueueBundle) to manage multiple webservice connections.
 

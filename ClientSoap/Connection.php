@@ -66,6 +66,7 @@ class Connection
     {
         // catch Soap error connection
         $soapUrl = $options['soap_url'] . '?wsdl';
+        
         $wsdl = @file_get_contents($soapUrl);
         if (!$wsdl)
         {

@@ -11,9 +11,6 @@
 
 namespace Heri\WebServiceBundle\ClientSoap;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
@@ -49,6 +46,7 @@ abstract class ClientObject
     public function __construct(ClientDispatcher $container, InputInterface $input)
     {
         $this->container = $container;
+        $this->input = $input;
         
         $this->configure();
         
@@ -82,7 +80,7 @@ abstract class ClientObject
      * Hydrates the object before to send it to WebService
      * 
      * @access    abstract public
-     * @param     Entity $record
+     * @param     Object $record
      * @return    void
      */
     abstract public function hydrate($record);
@@ -90,7 +88,7 @@ abstract class ClientObject
     /**
      * Rehydrates the object to use an unique instanciation of wsObject
      *
-     * @param Entity $record
+     * @param Object $record
      * @return void
      */
     public function rehydrate($record)
@@ -108,41 +106,7 @@ abstract class ClientObject
      * 
      * @return mixed
      */
-    public function getNextRecord()
-    {
-        $em = $this->container->getEntityManager();
-        
-        $descriptor = $em->getClassMetadata($this->table);
-        $columns    = (array) $descriptor->fieldNames;
-        $this->columns = array_keys($columns);
-        
-        $qb = $em->createQueryBuilder()
-            ->select('a')
-            ->from($this->table, 'a');
-        
-        $qb = $this->addCriteria($qb);
-        
-        if (in_array('to_update', $this->columns)) {
-            $qb->andWhere('a.toUpdate = :updated');
-            $qb->setParameter('updated', true);
-        }
-        
-        if (!is_null($this->recordId)) {
-            $qb->andWhere('a.'.$this->primaryKey . ' = :record');
-            $qb->setParameter('record', $this->recordId);
-        }
-        
-        $query = $qb->getQuery();
-        
-        $record = $this->fetch($query);
-
-        return $record ? $record : false;
-    }
-    
-    public function fetch(Query $query)
-    {
-        return $query->getOneOrNullResult();
-    }
+    abstract public function getNextRecord();
     
     /**
      * Send data to WebService
@@ -161,15 +125,18 @@ abstract class ClientObject
     }
     
     /**
-     * Adds condition to retrieves the next record
-     *
-     * @uses      Doctrine
-     * @param     Doctrine\ORM\QueryBuilder $qb
-     * @access    public
+     * Pushs a record and return the results 
+     * 
+     * @access    abstract public
+     * @param     Object $record
+     * @return    array
      */
-    public function addCriteria(QueryBuilder $qb)
+    public function pushRecord($record)
     {
-        return $qb;
+        $this->rehydrate($record);
+        $this->push();
+        
+        return (array) $this->result;
     }
     
     public function postSynchronize()
@@ -182,18 +149,6 @@ abstract class ClientObject
         }
         
         return (array) $this->result;
-    }
-    
-    /**
-     * Adds columns to set after synchronize
-     *
-     * @uses      Doctrine
-     * @param     Doctrine\ORM\QueryBuilder $qb
-     * @access    public
-     */
-    public function addColumnsToUpdate(QueryBuilder $qb)
-    {
-        return $qb;
     }
     
     /**
@@ -264,28 +219,9 @@ abstract class ClientObject
     }
     
     /**
-     * @uses      Doctrine
      * @access    protected
      */
-    protected function setAsUpdated()
-    {
-        $em = $this->container->getEntityManager();
-        
-        $qb = $em->createQueryBuilder()
-            ->update($this->table, 'a');
-        
-        if (in_array('to_update', $this->columns)) {
-            $qb->set('a.toUpdate', $qb->expr()->literal(false));
-        }
-
-        $qb = $this->addColumnsToUpdate($qb);
-        
-        $qb->where('a.'.$this->primaryKey.' = :pk_value');
-        $method = 'get' . ucfirst($this->primaryKey);
-        $qb->setParameter('pk_value', $this->record->$method());
-        $query = $qb->getQuery();
-        $query->execute();
-    }
+    abstract protected function setAsUpdated();
     
     /**
      * Throws WebService exceptions
@@ -310,7 +246,7 @@ abstract class ClientObject
         $wsConf = null;
         $webservices = $config['webservices'];
         foreach ($webservices as $webservice) {
-            if (isset($webservice['name'][$name])) {
+            if ($webservice['name'] == $name) {
                 $wsConf = $webservice;
                 break;
             }

@@ -11,34 +11,20 @@
 
 namespace Heri\WebServiceBundle\ClientSoap;
 
-use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Send data to WebServices
  */
-class ClientDispatcher
+abstract class ClientDispatcher
 {
     protected
-        $em,
         $connection,
         $logger,
         $client,
         $config
     ;
-    
-    /**
-     * @param  EntityManager $em
-     * @param  Connection $connection
-     * @param  Logger $logger
-     */
-    public function __construct(EntityManager $em, Connection $connection, Logger $logger)
-    {
-        $this->em = $em;
-        $this->connection = $connection;
-        $this->logger = $logger;
-    }
     
     /**
      * @param  array $config
@@ -72,11 +58,6 @@ class ClientDispatcher
     public function getConnection()
     {
         return $this->connection;
-    }
-    
-    public function getEntityManager()
-    {
-        return $this->em;
     }
     
     public function getLogger()

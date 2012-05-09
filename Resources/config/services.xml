@@ -6,7 +6,7 @@
 
     <services>
         <service id="ws.connection" class="Heri\WebServiceBundle\ClientSoap\Connection" />
-        <service id="ws.client" class="Heri\WebServiceBundle\ClientSoap\ClientDispatcher">
+        <service id="ws.client" class="Heri\WebServiceBundle\ClientSoap\Doctrine\ClientDispatcher">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="ws.connection" />
             <argument type="service" id="logger" />

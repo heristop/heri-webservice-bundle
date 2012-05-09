@@ -67,8 +67,8 @@ class SyncCommand extends ContainerAwareCommand
     protected function pushRecord($record = null)
     {
         try {
-          $this->client->rehydrate($record);
-          $this->client->push();
+            $this->client->rehydrate($record);
+            $this->client->push();
         }
         catch (\Exception $e) {
             throw new \Exception($e->getMessage());
