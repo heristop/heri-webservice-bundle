@@ -263,7 +263,7 @@ abstract class ClientObject
         );
         
         if (isset($config['authentication'])) {
-            $otpions = array_merge($options, $config['authentication']);
+            $options = array_merge($options, $config['authentication']);
         }
         
         $this->client = $this->container->getConnection()->getSoapClient($name, $options);
