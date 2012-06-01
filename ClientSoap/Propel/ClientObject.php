@@ -68,6 +68,7 @@ abstract class ClientObject extends \Heri\WebServiceBundle\ClientSoap\ClientObje
     protected function setAsUpdated()
     {
         $query = $this->getQuery();
+        $query->filterById($this->record->getPrimaryKey());
         
         $updatedColumns = $this->addColumnsToUpdate();
         $query->update($updatedColumns);
