@@ -1,6 +1,6 @@
 # WebServiceBundle
 
-This bundle allows to configure the mapping between an entity and a webservice.
+This bundle allows to synchronize a table with a soap webservice.
 
 ## Installation
 
@@ -11,6 +11,16 @@ Download sources from github:
     [HeriJobQueueBundle]
         git=https://github.com/heristop/HeriWebServiceBundle.git
         target=/bundles/Heri/WebServiceBundle/
+```
+
+Or use composer adding the requirement below:
+
+``` js
+{
+    "require": {
+        "heristop/webservice-bundle": "*"
+    }
+}
 ```
 
 Register namespace in autoload:
@@ -27,36 +37,6 @@ Load in AppKernel:
 
 ```php
     $bundles[] = new Heri\JobQueueBundle\HeriWebServiceBundle();
-```
-
-## Zend Framework
-
-Use this unofficial github mirror:
-
-```shell
-    git clone https://github.com/tjohns/zf.git vendor/zf
-```
-
-Register a prefix in AppKernel:
-
-```php
-
-    $loader->registerPrefixes(array(
-        ...
-        'Zend_' => __DIR__.'/../vendor/zf/library',
-    ));
-
-```
-
-Following the [official ZF documentation](http://framework.zend.com/manual/en/performance.classloading.html#performance.classloading.striprequires.sed), remove all _require_once()_:
-
-```shell
-
-    $ cd vendor/zf/library
-    $ find . -name '*.php' -not -wholename '*/Loader/Autoloader.php' \
-    -not -wholename '*/Application.php' -print0 | \
-    xargs -0 sed --regexp-extended --in-place 's/(require_once)/\/\/ \1/g'
-
 ```
 
 ## Usage

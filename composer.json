@@ -1,0 +1,26 @@
+{
+    "name": "heristop/webservice-bundle",
+    "description": "This bundle allows to synchronize a table with a soap webservice.",
+    "keywords": [ "sf2", "soap", "webservice", "queue", "doctrine", "propel" ],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Alexandre Mogère"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.zendframework.com/"
+        }
+    ],
+    "require": {
+        "symfony/framework-bundle": "~2.1",
+        "zendframework/zend-soap": "2.0.*"
+    },
+    "autoload": {
+        "psr-0": { "Heri\\WebserviceBundle": "" }
+    },
+    "target-dir": "Heri/WebserviceBundle"
+}

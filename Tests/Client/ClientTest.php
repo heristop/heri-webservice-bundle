@@ -6,8 +6,8 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Heri\WebServiceBundle\Command\SyncCommand;
 use Heri\WebServiceBundle\Entity\Sample;
 
-require_once __DIR__ . '/../../../../../../app/AppKernel.php';
-require_once __DIR__ . '/../../../../../../app/bootstrap.php.cache';
+require_once __DIR__ . '/../../../../../../../app/bootstrap.php.cache';
+require_once __DIR__ . '/../../../../../../../app/AppKernel.php';
 
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -82,10 +82,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     
     protected function countRecordToUpdate()
     {
-        $query = $this->em->createQuery(<<<EOF
-        SELECT COUNT(s.id) FROM Heri\WebServiceBundle\Entity\Sample s
-        WHERE s.toUpdate = 1
-EOF
+        $query = $this->em->createQuery("
+            SELECT COUNT(s.id) FROM Heri\WebServiceBundle\Entity\Sample s
+            WHERE s.toUpdate = 1
+        "
         );
         
         return $query->getSingleScalarResult();
