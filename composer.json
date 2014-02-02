@@ -20,7 +20,7 @@
         "zendframework/zend-soap": "2.0.*"
     },
     "autoload": {
-        "psr-0": { "Heri\\WebserviceBundle": "" }
+        "psr-0": { "Heri\\WebServiceBundle": "" }
     },
-    "target-dir": "Heri/WebserviceBundle"
+    "target-dir": "Heri/WebServiceBundle"
 }
