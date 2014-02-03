@@ -98,7 +98,7 @@ class Connection
 
         try
         {
-            self::$client = new \Zend_Soap_Client($soapUrl, $configuration);
+            self::$client = new \Zend\Soap\Client($soapUrl, $configuration);
         }
         catch(SoapException $e)
         {
