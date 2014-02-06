@@ -1,6 +1,6 @@
 <?php
 
-namespace Heri\WebServiceBundle\Tests\Server;
+namespace Heri\Bundle\WebServiceBundle\Tests\Server;
 
 class Sample
 {

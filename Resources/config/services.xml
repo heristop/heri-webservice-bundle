@@ -5,15 +5,15 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="ws.connection" class="Heri\WebServiceBundle\ClientSoap\Connection" />
-        <service id="ws.client" class="Heri\WebServiceBundle\ClientSoap\Doctrine\ClientDispatcher">
+        <service id="ws.connection" class="Heri\Bundle\WebServiceBundle\ClientSoap\Connection" />
+        <service id="ws.client" class="Heri\Bundle\WebServiceBundle\ClientSoap\Doctrine\ClientDispatcher">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="ws.connection" />
             <argument type="service" id="logger" />
             <tag name="monolog.logger" channel="webservice" />
         </service>
         <!--
-        <service id="sync.listener" class="Heri\WebServiceBundle\Service\SyncListener">
+        <service id="sync.listener" class="Heri\Bundle\WebServiceBundle\Service\SyncListener">
             <argument type="service" id="jobqueue" />
             <tag name="doctrine.event_listener" event="prePersist" connection="default" />
             <tag name="doctrine.event_listener" event="postPersist" connection="default" />

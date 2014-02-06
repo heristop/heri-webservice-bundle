@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Heri\WebServiceBundle\ClientSoap\Doctrine;
+namespace Heri\Bundle\WebServiceBundle\ClientSoap\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Monolog\Logger;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 /**
  * Send data to WebServices
  */
-class ClientDispatcher extends \Heri\WebServiceBundle\ClientSoap\ClientDispatcher
+class ClientDispatcher extends \Heri\Bundle\WebServiceBundle\ClientSoap\ClientDispatcher
 {
     protected $em;
     

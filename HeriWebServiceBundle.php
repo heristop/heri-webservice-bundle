@@ -1,6 +1,6 @@
 <?php
 
-namespace Heri\WebServiceBundle;
+namespace Heri\Bundle\WebServiceBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

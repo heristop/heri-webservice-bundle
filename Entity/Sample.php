@@ -1,11 +1,11 @@
 <?php
 
-namespace Heri\WebServiceBundle\Entity;
+namespace Heri\Bundle\WebServiceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Heri\WebServiceBundle\Entity\Sample
+ * Heri\Bundle\WebServiceBundle\Entity\Sample
  *
  * @ORM\Table(name="sample")
  * @ORM\Entity

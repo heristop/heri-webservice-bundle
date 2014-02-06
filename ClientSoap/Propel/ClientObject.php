@@ -9,14 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Heri\WebServiceBundle\ClientSoap\Propel;
+namespace Heri\Bundle\WebServiceBundle\ClientSoap\Propel;
 
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Send data to WebServices
  */
-abstract class ClientObject extends \Heri\WebServiceBundle\ClientSoap\ClientObject
+abstract class ClientObject extends \Heri\Bundle\WebServiceBundle\ClientSoap\ClientObject
 {
     /**
      * Retrieves the next record (must be call in a recursive function to make the loop)

@@ -3,8 +3,8 @@
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
-use Heri\WebServiceBundle\Command\SyncCommand;
-use Heri\WebServiceBundle\Entity\Sample;
+use Heri\Bundle\WebServiceBundle\Command\SyncCommand;
+use Heri\Bundle\WebServiceBundle\Entity\Sample;
 
 require_once __DIR__ . '/../../../../../../../app/bootstrap.php.cache';
 require_once __DIR__ . '/../../../../../../../app/AppKernel.php';
@@ -83,7 +83,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     protected function countRecordToUpdate()
     {
         $query = $this->em->createQuery("
-            SELECT COUNT(s.id) FROM Heri\WebServiceBundle\Entity\Sample s
+            SELECT COUNT(s.id) FROM Heri\Bundle\WebServiceBundle\Entity\Sample s
             WHERE s.toUpdate = 1
         "
         );

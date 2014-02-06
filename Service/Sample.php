@@ -1,8 +1,8 @@
 <?php
 
-namespace Heri\WebServiceBundle\Service;
+namespace Heri\Bundle\WebServiceBundle\Service;
 
-use Heri\WebServiceBundle\ClientSoap\ClientObject;
+use Heri\Bundle\WebServiceBundle\ClientSoap\ClientObject;
 use Doctrine\ORM\QueryBuilder;
 
 class Sample extends ClientObject

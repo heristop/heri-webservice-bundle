@@ -36,7 +36,7 @@ Register namespace in autoload:
 Load in AppKernel: 
 
 ```php
-    $bundles[] = new Heri\JobQueueBundle\HeriWebServiceBundle();
+    $bundles[] = new Heri\WebServiceBundle\HeriWebServiceBundle();
 ```
 
 ## Usage
@@ -63,9 +63,9 @@ The bundle contains an example:
 
 ```php
 
-    namespace Heri\WebServiceBundle\Service;
+    namespace Heri\Bundle\WebServiceBundle\Service;
     
-    use Heri\WebServiceBundle\ClientSoap\ClientObject;
+    use Heri\Bundle\WebServiceBundle\ClientSoap\ClientObject;
     
     class Sample extends ClientObject
     {
@@ -119,7 +119,7 @@ Edit config.yml to add _SyncListener_:
 
     services:
        sync.listener:
-            class: Heri\WebServiceBundle\Listener\SyncListener
+            class: Heri\Bundle\WebServiceBundle\Listener\SyncListener
             tags:
                 - { name: doctrine.event_listener, event: prePersist, connection: default }
                 - { name: doctrine.event_listener, event: postPersist, connection: default }
@@ -135,13 +135,13 @@ Override configuration and add the depedency to jobqueue service in config.yml:
 
     services:
         sync.listener:
-            class: Heri\WebServiceBundle\Listener\SyncListener
+            class: Heri\Bundle\WebServiceBundle\Listener\SyncListener
             arguments: [@jobqueue]
             tags:
                 - { name: doctrine.event_listener, event: prePersist, connection: default }
                 - { name: doctrine.event_listener, event: postPersist, connection: default }
         jobqueue:
-            class: Heri\JobQueueBundle\Service\QueueService
+            class: Heri\Bundle\JobQueueBundle\Service\QueueService
             arguments: [@logger]
             tags:
                 - { name: monolog.logger, channel: jobqueue }

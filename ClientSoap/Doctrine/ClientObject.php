@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Heri\WebServiceBundle\ClientSoap\Doctrine;
+namespace Heri\Bundle\WebServiceBundle\ClientSoap\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 /**
  * Send data to WebServices
  */
-abstract class ClientObject extends \Heri\WebServiceBundle\ClientSoap\ClientObject
+abstract class ClientObject extends \Heri\Bundle\WebServiceBundle\ClientSoap\ClientObject
 {
     /**
      * Rehydrates the object to use an unique instanciation of wsObject

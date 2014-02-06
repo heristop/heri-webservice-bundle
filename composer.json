@@ -19,8 +19,13 @@
         "symfony/framework-bundle": "~2.1",
         "zendframework/zend-soap": "2.0.*"
     },
+    "target-dir": "Heri/Bundle/WebServiceBundle",
     "autoload": {
-        "psr-0": { "Heri\\WebServiceBundle": "" }
+        "psr-0": { "Heri\\Bundle\\WebServiceBundle": "" }
     },
-    "target-dir": "Heri/WebServiceBundle"
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
 }

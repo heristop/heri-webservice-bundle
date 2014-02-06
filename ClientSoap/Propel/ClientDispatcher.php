@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Heri\WebServiceBundle\ClientSoap\Propel;
+namespace Heri\Bundle\WebServiceBundle\ClientSoap\Propel;
 
-use Heri\WebServiceBundle\ClientSoap\Connection;
+use Heri\Bundle\WebServiceBundle\ClientSoap\Connection;
 
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 /**
  * Send data to WebServices
  */
-class ClientDispatcher extends \Heri\WebServiceBundle\ClientSoap\ClientDispatcher
+class ClientDispatcher extends \Heri\Bundle\WebServiceBundle\ClientSoap\ClientDispatcher
 {
     /**
      * @param  Connection $connection

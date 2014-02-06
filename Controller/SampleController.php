@@ -1,6 +1,6 @@
 <?php
 
-namespace Heri\WebServiceBundle\Controller;
+namespace Heri\Bundle\WebServiceBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;

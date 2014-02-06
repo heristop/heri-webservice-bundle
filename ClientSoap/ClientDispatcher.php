@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Heri\WebServiceBundle\ClientSoap;
+namespace Heri\Bundle\WebServiceBundle\ClientSoap;
 
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Input\InputInterface;

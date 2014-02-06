@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Heri\WebServiceBundle\Listener;
+namespace Heri\Bundle\WebServiceBundle\Listener;
 
 use Symfony\Component\EventDispatcher\Event;
 use Doctrine\ORM\Event\LifecycleEventArgs;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Heri\WebServiceBundle\DependencyInjection;
+namespace Heri\Bundle\WebServiceBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
